@@ -1,0 +1,28 @@
+Создать подсеть
+yc vpc subnet create  --name my-yc-subnet-a --zone ru-central1-a  --range 10.1.2.0/24 --network-name my-yc-network --description "my first subnet via yc"
+
+
+Удалить подсеть
+yc vpc subnet delete --name my-yc-subnet-a
+
+
+Создание ВМ
+yc compute instance create --name my-yc-instance --network-interface subnet-name=my-yc-subnet-a,nat-ip-version=ipv4 --zone ru-central1-a --ssh-key C:\Users\user/.ssh/id_rsa.pub
+
+
+Создание и удаление каталога:
+yc resource-manager folder create --name my-folder --description "my folder"
+yc resource-manager folder delete --name my-folder
+
+
+Создание секьюрити групп
+yc vpc security-group create --name mygroup --network-name default --folder-name default --cloud-id b1ghn76gfv2t9sur3one
+yc vpc security-group create --name=mygroup2 "--rule", "direction=ingress,port=443,protocol=tcp,v4-cidrs=[10.0.0.0/8]" --network-name default --folder-name default --cloud-id b1ghn76gfv2t9sur3one
+
+
+Сделать сервис акаунт:
+yc iam service-account create --name k8s-res-sa-b1ghn76gfv2t9sur3one --folder-id b1gimpg0k3jko5g3vt7q
+
+
+Привязать сервис-аккаунт myaccount (id=ajegigcse3g4iv8n5vp7) к каталогу default
+yc resource-manager folder add-access-binding default --role editor --subject serviceAccount:ajegigcse3g4iv8n5vp7

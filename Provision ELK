@@ -1,0 +1,36 @@
+Поднять ELK
+Поднять кластер
+yc managed-elasticsearch cluster create --name myelastic --environment production --network-name default --host zone-id=ru-central1-a,subnet-name=default-ru-central1-a,assign-public-ip=true,type=masternode --masternode-resource-preset s2.micro --masternode-disk-type=network-ssd --masternode-disk-size=20 --host zone-id=ru-central1-a,subnet-name=default-ru-central1-a,assign-public-ip=true,type=masternode --masternode-resource-preset s2.micro --masternode-disk-type=network-ssd --masternode-disk-size=20 --host zone-id=ru-central1-a,subnet-name=default-ru-central1-a,assign-public-ip=true,type=masternode --masternode-resource-preset s2.micro --masternode-disk-type=network-ssd --masternode-disk-size=20 --host zone-id=ru-central1-a,subnet-name=default-ru-central1-a,assign-public-ip=true,type=datanode --datanode-resource-preset m2.large --datanode-disk-type=network-ssd --datanode-disk-size=100 --admin-password=elasticPasswd --security-group-ids enp29031o2gr707odve1 --version 7.17 --edition basic --deletion-protection=false
+
+
+Удалить метку "не удалять кластер", если по ошибке решили сделать кластер не удаляемым)
+yc managed-elasticsearch cluster update --name myelastic --security-group-ids enp29031o2gr707odve1 --version 7.17 --edition basic --deletion-protection=false
+
+
+Удалить кластер
+yc managed-elasticsearch cluster delete --name myelastic
+
+
+Остановить/запустить кластер ELK
+yc managed-elasticsearch cluster stop myelastic
+yc managed-elasticsearch cluster start myelastic
+
+
+Количество хостов в кластере ELK
+yc managed-elasticsearch host list --cluster-name myelastic
+
+
+Добавление хостов в кластер ELK (дата-нода, если нужен мастер то в конце - masternode)
+yc managed-elasticsearch host add --cluster-name myelastic --host zone-id=ru-central1-a,subnet-name=default-ru-central1-a,assign-public-ip=true,type=datanode
+
+
+Изменение размеров дисков для кластера ELK
+yc managed-elasticsearch cluster update myelastic --datanode-disk-size 50 --masternode-disk-size 20
+
+
+Изменить типы ВМ для кластера ELK
+yc managed-elasticsearch cluster update myelastic --datanode-resource-preset s3-c4-m16 --masternode-resource-preset s2.micro
+
+
+Изменить время тех.обслуживания
+yc managed-elasticsearch cluster update myelastic --maintenance-window type=weekly,'day=SUN,hour=21'

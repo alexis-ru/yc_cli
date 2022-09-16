@@ -1,0 +1,22 @@
+Поднять сервер БД Postgres
+yc managed-postgresql cluster create --name srvPGMProd --environment production --network-name default --host zone-id=ru-central1-a,subnet-id=e9bnf3jnc34k4q4h1iiu --resource-preset s2.micro --user name=user1,password=passw0rd --database name=proddb,owner=user1 --disk-size 20 --disk-type network-hdd --security-group-ids enp29031o2gr707odve1 --deletion-protection=false --serverless-access --postgresql-version 14
+
+
+Удалить сервер БД Postgres
+yc managed-postgresql cluster delete --name srvPGMProd
+
+
+Добавить хост в кластер
+yc managed-postgresql host add --cluster-name srvPGMProd --host zone-id=ru-central1-a,subnet-id=e9bnf3jnc34k4q4h1iiu
+
+
+Получить список хостов кластера Postgres
+yc managed-postgresql host list --cluster-name srvPGMProd
+
+
+Настроить репликацию (srvPGMProd - мастер, srvPGSProd - слейв)
+yc managed-postgresql cluster start-failover srvPGMProd --host rc1a-ra0iws76qnixrciz.mdb.yandexcloud.net
+
+
+Дополнительная настройка PG кластера (бекап, тип соединения и сбор статистики)
+yc managed-postgresql cluster update srvPGMProd --backup-window-start 23:59 UTC --maintenance-window type=weekly,'day=SUN,'hour=21' --websql-access=true --deletion-protection=false --connection-pooling-mode=SESSION --performance-diagnostics enabled=true,'sessions-sampling-interval=3600,'statements-sampling-interval=3600

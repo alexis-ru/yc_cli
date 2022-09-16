@@ -1,0 +1,8 @@
+Поднять кластер K8s
+yc managed-kubernetes cluster create --name test-k8s --network-name default --zone ru-central1-a --subnet-name default-ru-central1-a --public-ip --release-channel regular --version 1.21 --cluster-ipv4-range 10.1.0.0/16 --service-ipv4-range 10.2.0.0/16 --service-account-name myaccount --node-service-account-name k8s-res-sa-b1ghn76gfv2t9sur3one --daily-maintenance-window start=22:00,duration=10h --folder-name default --cloud-id b1ghn76gfv2t9sur3one
+
+Удалить кластер K8s
+yc managed-kubernetes cluster delete --name test-k8s
+
+Настройка автомасштабировани нод K8s
+yc managed-kubernetes node-group create --auto-scale min=4, max=15, initial=5
